@@ -1,0 +1,31 @@
+version: '3'
+
+services:
+  load_data:
+    build: load_data/
+    depends_on:
+        - my_postgres 
+
+  my_postgres:
+    image: postgres
+    ports:
+     - 5551:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=9876
+
+  my_metabase:
+    restart: "always"
+    image: metabase/metabase
+    environment:
+      - MB_DB_TYPE=postgres
+      - MB_DB_DBNAME=postgres
+      - MB_DB_PORT=5432
+      - MB_DB_USER=postgres
+      - MB_DB_PASS=9876
+      - MB_DB_HOST=my_postgres
+
+    ports:
+      - 3000:3000
+
+
